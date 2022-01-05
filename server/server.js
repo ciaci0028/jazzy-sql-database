@@ -11,17 +11,10 @@ app.listen(PORT, () => {
     console.log('listening on port', PORT)
 });
 
-// Require the pertinent elements
-const pg = require('pg');
+
 const router = express.Router();
 
-// Pool as our connection to database
-const pool = new pg.Pool({
-    database: 'jazzy_sql',
 
-    host: 'localhost',
-    port: 5432,
-});
 
 // TODO - Replace static content with a database tables
 // const artistList = [ 
