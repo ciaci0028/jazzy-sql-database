@@ -11,6 +11,18 @@ app.listen(PORT, () => {
     console.log('listening on port', PORT)
 });
 
+// Require the pertinent elements
+const pg = require('pg');
+const router = express.Router();
+
+// Pool as our connection to database
+const pool = new pg.Pool({
+    database: 'jazzy_sql',
+
+    host: 'localhost',
+    port: 5432,
+});
+
 // TODO - Replace static content with a database tables
 const artistList = [ 
     {
@@ -50,12 +62,47 @@ const songList = [
 
 app.get('/artist', (req, res) => {
     console.log(`In /songs GET`);
-    res.send(artistList);
+    
+    // write SQL query/statement
+    const queryText = 'SELECT * FROM "artist" SORT BY "birthdate" DESC;';
+    // Send SQL to database
+    pool.query(queryText)
+        .then( (dbRes) => {
+            res.send(dbRes.rows);
+        })
+        .catch( (err) => {
+            console.log('get /artist failed', err);
+
+            // Tell the client
+            res.sendStatus(500);
+        });
 });
 
 app.post('/artist', (req, res) => {
-    artistList.push(req.body);
-    res.sendStatus(201);
+    console.log('post /artist req.body', req.body);
+
+    let queryText = `
+        INSERT INTO "artist"
+            ("name", "birthdate")
+        VALUES
+            ($1, $2)
+    `;
+
+    // Defining parameters for placeholders
+    let queryParams = [
+        req.body.name,      // $1
+        req.body.birthdate, // $2
+    ];
+
+    // Using pool to pass whole thing through
+    pool.query(queryText, queryParams)
+        .then( (dbRes) => {
+            res.sendStatus(201);
+        })
+        .catch( (err) => {
+            console.log('/artist post failed', err);
+            res.sendStatus(500);
+        });
 });
 
 app.get('/song', (req, res) => {
