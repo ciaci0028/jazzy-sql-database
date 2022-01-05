@@ -64,7 +64,7 @@ app.get('/artist', (req, res) => {
     console.log(`In /songs GET`);
     
     // write SQL query/statement
-    const queryText = 'SELECT * FROM "artist" SORT BY "birthdate" DESC;';
+    const queryText = 'SELECT * FROM "artist" ORDER BY "birthdate" DESC;';
     // Send SQL to database
     pool.query(queryText)
         .then( (dbRes) => {
@@ -107,7 +107,7 @@ app.post('/artist', (req, res) => {
 
 app.get('/song', (req, res) => {
     console.log(`In /songs GET`);
-    res.send(songList);
+
 });
 
 app.post('/song', (req, res) => {
