@@ -5,13 +5,13 @@
 -- );
 
 CREATE TABLE "artist" (
-	id SERIAL,
+	id SERIAL PRIMARY KEY,
 	name VARCHAR(80),
 	birthdate DATE
 );
 
 CREATE TABLE "song" (
-	id SERIAL,
+	id SERIAL PRIMARY KEY,
 	title VARCHAR(255),
 	length VARCHAR(10),
 	released DATE

@@ -10,10 +10,16 @@ router.get('/', (req, res) => {
     console.log(`In /songs GET`);
     
     // write SQL query/statement
-    const queryText = 'SELECT * FROM "artist" ORDER BY "birthdate" DESC;';
+    const queryText = `
+        SELECT "name", 
+        to_char("birthdate", 'Mon fmDDth, YYYY') AS "birthdate" 
+        FROM "artist" 
+        ORDER BY "birthdate" DESC;
+    `;
     // Send SQL to database
     pool.query(queryText)
         .then( (dbRes) => {
+            console.log('dbRes', dbRes.rows);
             res.send(dbRes.rows);
         })
         .catch( (err) => {

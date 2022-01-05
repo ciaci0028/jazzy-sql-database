@@ -8,7 +8,12 @@ router.get('/', (req, res) => {
     console.log(`In /songs GET`);
 
     // write SQL query/statement
-    const queryText = 'SELECT * FROM "song" ORDER BY "title";';
+    const queryText = `
+        SELECT "title", "length",
+        to_char("released", 'Mon fmDDth, YYYY') AS "released"
+        FROM "song" 
+        ORDER BY UPPER("title");
+    `;
     // Send SQL to database
     pool.query(queryText)
         .then( (dbRes) => {
