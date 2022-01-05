@@ -12,9 +12,11 @@ app.listen(PORT, () => {
     console.log('listening on port', PORT)
 });
 
-
 const router = express.Router();
 
+// Replacing app.get and post for /artist
+let artistRouter = require('./routes/artist');
+app.use('/artist', artistRouter);
 
 
 // TODO - Replace static content with a database tables
@@ -54,50 +56,51 @@ const router = express.Router();
 //     }
 // ];
 
-app.get('/artist', (req, res) => {
-    console.log(`In /songs GET`);
+// app.get('/artist', (req, res) => {
+//     console.log(`In /songs GET`);
     
-    // write SQL query/statement
-    const queryText = 'SELECT * FROM "artist" ORDER BY "birthdate" DESC;';
-    // Send SQL to database
-    pool.query(queryText)
-        .then( (dbRes) => {
-            res.send(dbRes.rows);
-        })
-        .catch( (err) => {
-            console.log('get /artist failed', err);
+//     // write SQL query/statement
+//     const queryText = 'SELECT * FROM "artist" ORDER BY "birthdate" DESC;';
+//     // Send SQL to database
+//     pool.query(queryText)
+//         .then( (dbRes) => {
+//             res.send(dbRes.rows);
+//         })
+//         .catch( (err) => {
+//             console.log('get /artist failed', err);
 
-            // Tell the client
-            res.sendStatus(500);
-        });
-});
+//             // Tell the client
+//             res.sendStatus(500);
+//         });
+// });
 
-app.post('/artist', (req, res) => {
-    console.log('post /artist req.body', req.body);
+// app.post('/artist', (req, res) => {
+//     console.log('post /artist req.body', req.body);
 
-    let queryText = `
-        INSERT INTO "artist"
-            ("name", "birthdate")
-        VALUES
-            ($1, $2)
-    `;
+//     let queryText = `
+//         INSERT INTO "artist"
+//             ("name", "birthdate")
+//         VALUES
+//             ($1, $2)
+//     `;
 
-    // Defining parameters for placeholders
-    let queryParams = [
-        req.body.name,      // $1
-        req.body.birthdate, // $2
-    ];
+//     // Defining parameters for placeholders
+//     let queryParams = [
+//         req.body.name,      // $1
+//         req.body.birthdate, // $2
+//     ];
 
-    // Using pool to pass whole thing through
-    pool.query(queryText, queryParams)
-        .then( (dbRes) => {
-            res.sendStatus(201);
-        })
-        .catch( (err) => {
-            console.log('/artist post failed', err);
-            res.sendStatus(500);
-        });
-});
+//     // Using pool to pass whole thing through
+//     pool.query(queryText, queryParams)
+//         .then( (dbRes) => {
+//             res.sendStatus(201);
+//         })
+//         .catch( (err) => {
+//             console.log('/artist post failed', err);
+//             res.sendStatus(500);
+//         });
+// });
+
 
 app.get('/song', (req, res) => {
     console.log(`In /songs GET`);
